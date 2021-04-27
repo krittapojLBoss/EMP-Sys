@@ -49,6 +49,5 @@ export default {
 .content {
   height: 100%;
   width: 100%;
-  padding-top: 150px;
 }
 </style>

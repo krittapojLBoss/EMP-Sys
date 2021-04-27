@@ -1,12 +1,40 @@
 <template>
   <b-container fluid>
+    <div class="InputSearch py-3">
+      <b-form-group
+        label="Search"
+        label-for="filter-input"
+        label-cols-sm="3"
+        label-align-sm="right"
+        label-size="sm"
+        class="mb-0"
+      >
+        <b-input-group size="sm">
+          <b-form-input
+            id="filter-input"
+            v-model="filter"
+            type="search"
+            placeholder="Type to Search"
+          ></b-form-input>
+
+          <b-input-group-append>
+            <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form-group>
+    </div>
+
     <b-table
-      :items="Emps"
+      :items="GetEmps"
       :fields="fields"
+      :current-page="currentPage"
+      :per-page="perPage"
       stacked="md"
+      :filter="filter"
+      :filter-included-fields="filterOn"
       show-empty
       small
-      @filtered="onFiltered"
+      responsive
     >
       <template #cell(actions)="row">
         <b-button
@@ -22,8 +50,15 @@
         </b-button>
       </template>
     </b-table>
-
-    <!-- Info modal -->
+    <div class="Pagination my-4">
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="length"
+        :per-page="perPage"
+        align="fill"
+        size="sm"
+      ></b-pagination>
+    </div>
   </b-container>
 </template>
 
@@ -70,25 +105,20 @@ export default {
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
-      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       filter: null,
       filterOn: [],
-      infoModal: {
-        id: "info-modal",
-        title: "",
-        content: "",
-      },
     };
   },
   computed: {
-    Emps() {
-      return this.GetEmps;
+    ...mapGetters({
+      GetEmps: "GetEmps",
+    }),
+    length() {
+      return this.GetEmps.length;
     },
   },
+
   mounted() {
-    this.totalRows = this.Emps.length;
-  },
-  created() {
     this.GetEmp();
   },
 
@@ -97,9 +127,11 @@ export default {
       GetEmp: "GetEmps",
       GetId: "GetId",
     }),
-    ...mapGetters({
-      GetEmps: "GetEmps",
-    }),
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
     SendEdit(item) {
       this.$router.push({
         name: "EditEmployeePage",
@@ -132,4 +164,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.InputSearch {
+  margin: auto;
+  max-width: 400px;
+  width: 100%;
+  height: 70px;
+}
+.Pagination {
+  max-width: 400px;
+  width: 100%;
+  height: 100%;
+}
+</style>

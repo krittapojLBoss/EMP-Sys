@@ -31,4 +31,26 @@ export default {
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
 }
+@media only screen and (max-width: 787px) {
+  .EmployeesPage {
+    max-width: 1400px;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 330px;
+  }
+}
+@media only screen and (max-width: 444px) {
+  .EmployeesPage {
+    max-width: 1400px;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 370px;
+  }
+}
 </style>
