@@ -1,70 +1,80 @@
 <template>
-  <b-container fluid>
-    <div class="InputSearch py-3">
-      <b-form-group
-        label="Search"
-        label-for="filter-input"
-        label-cols-sm="3"
-        label-align-sm="right"
-        label-size="sm"
-        class="mb-0"
-      >
-        <b-input-group size="sm">
-          <b-form-input
-            id="filter-input"
-            v-model="filter"
-            type="search"
-            placeholder="Type to Search"
-          ></b-form-input>
-
-          <b-input-group-append>
-            <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
+  <div>
+    <div v-if="GetStatus">
+      <Spinner size="88" line-size="12" />
     </div>
+    <div v-else>
+      <b-container fluid>
+        <div class="InputSearch py-3">
+          <b-form-group
+            label="Search"
+            label-for="filter-input"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-input
+                id="filter-input"
+                v-model="filter"
+                type="search"
+                placeholder="Type to Search"
+              ></b-form-input>
 
-    <b-table
-      :items="GetEmps"
-      :fields="fields"
-      :current-page="currentPage"
-      :per-page="perPage"
-      stacked="md"
-      :filter="filter"
-      :filter-included-fields="filterOn"
-      show-empty
-      small
-      responsive
-    >
-      <template #cell(actions)="row">
-        <b-button
-          size="sm"
-          class="mr-1"
-          @click="test(row.item._id, row.item.Firstname)"
-          variant="danger"
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''"
+                  >Clear</b-button
+                >
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </div>
+
+        <b-table
+          :items="GetEmps"
+          :fields="fields"
+          :current-page="currentPage"
+          :per-page="perPage"
+          stacked="md"
+          :filter="filter"
+          :filter-included-fields="filterOn"
+          show-empty
+          small
+          responsive
         >
-          Delete
-        </b-button>
-        <b-button size="sm" variant="primary" @click="SendEdit(row.item)">
-          Edit
-        </b-button>
-      </template>
-    </b-table>
-    <div class="Pagination my-4">
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="length"
-        :per-page="perPage"
-        align="fill"
-        size="sm"
-      ></b-pagination>
+          <template #cell(actions)="row">
+            <b-button
+              size="sm"
+              class="mr-1"
+              @click="test(row.item._id, row.item.Firstname)"
+              variant="danger"
+            >
+              Delete
+            </b-button>
+            <b-button size="sm" variant="primary" @click="SendEdit(row.item)">
+              Edit
+            </b-button>
+          </template>
+        </b-table>
+        <div class="Pagination my-4">
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="length"
+            :per-page="perPage"
+            align="fill"
+            size="sm"
+          ></b-pagination>
+        </div>
+      </b-container>
     </div>
-  </b-container>
+  </div>
 </template>
 
 <script>
 import Swal from "sweetalert2";
 import { mapActions, mapGetters } from "vuex";
+import Spinner from "vue-simple-spinner";
 export default {
   data() {
     return {
@@ -109,9 +119,13 @@ export default {
       filterOn: [],
     };
   },
+  components: {
+    Spinner,
+  },
   computed: {
     ...mapGetters({
       GetEmps: "GetEmps",
+      GetStatus: "GetStatus",
     }),
     length() {
       return this.GetEmps.length;

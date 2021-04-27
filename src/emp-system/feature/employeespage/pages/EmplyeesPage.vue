@@ -1,5 +1,8 @@
 <template>
   <div class="EmployeesPage">
+    <div v-if="LoadingStatus" class="loading-div">
+      <Spinner />
+    </div>
     <div class="TableLayOut">
       <TableList></TableList>
     </div>
@@ -8,10 +11,11 @@
 
 <script>
 import TableList from "../components/TavleList.vue";
-
+import Spinner from "vue-simple-spinner";
 export default {
   components: {
     TableList,
+    Spinner,
   },
 };
 </script>
